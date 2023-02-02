@@ -1,0 +1,6 @@
+---
+cmk_registration_pw: secret0001
+cmk_agent_key_id: 1
+cmk_agent_key_pw: secret00002
+cmk_server_url: http://{{ cmk_server_fqdn }}
+cmk_api_url: "{{ cmk_server_url }}/{{ cmk_site_name }}/check_mk/api/1.0"

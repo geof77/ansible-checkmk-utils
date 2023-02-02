@@ -1,0 +1,11 @@
+---
+- name: Register agent for automatic upates
+  ansible.builtin.shell: |
+    /usr/bin/cmk-update-agent register -H {{ cmk_server_name }} \
+      -s {{ cmk_server_name }} -i {{ cmk_site_name }} -p http \
+      -U agent -S {{ cmk_registration_pw }} --trust-cert
+
+- name: Refresh agent updater cache so we do not wait 1 hour
+  ansible.builtin.file:
+    path: /var/lib/check_mk_agent/cache/plugins_cmk-update-agent.cache
+    state: absent

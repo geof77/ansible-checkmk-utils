@@ -1,0 +1,34 @@
+---
+# requirements: an initial role.mk file
+# you can use the provided file or generate one by saving your config
+- name: Ensure initial role.mk file exists
+  ansible.builtin.copy:
+    src: roles.mk
+    dest: "/omd/sites/{{ cmk_site_name }}/etc/check_mk/multisite.d/wato/roles.mk"
+    mode: 0660
+    owner: "{{ cmk_site_name }}"
+    group: "{{ cmk_site_name }}"
+    force: false
+
+- name: Ensure agent registration and download role exists
+  ansible.builtin.lineinfile:
+    state: present
+    path: "/omd/sites/{{ cmk_site_name }}/etc/check_mk/multisite.d/wato/roles.mk"
+    backrefs: true
+    regexp: '^(roles.update(?!.*, ''agent'':))(.*)\}\)$'
+    line: '\1\2, ''agent'': {''alias'': ''Agent registration and download'', ''permissions'': {''general.see_all'': True, ''general.use'': True, ''wato.download_agents'': True, ''wato.download_all_agents'': True, ''general.agent_pairing'': True, ''wato.see_all_folders'': True, ''wato.all_folders'': True}, ''builtin'': True, ''basedon'': None}})'
+
+- name: Create agent registration and download user
+  ansible.builtin.uri:
+    url: "{{ cmk_api_url }}/domain-types/user_config/collections/all"
+    method: POST
+    body_format: json
+    body: '{
+      "username": "agent",
+      "fullname": "Agent Registration and Download",
+      "auth_option": {"auth_type": "automation", "secret": "{{ cmk_registration_pw }}"}, "roles": ["agent"] }'
+    headers:
+      Authorization: "Bearer automation {{ cmk_automation_pw }}"
+      Accept: "application/json"
+  register: create_user
+  failed_when: "create_user.status != 200 and 'already exists' not in create_user.json.fields.username|join('')"

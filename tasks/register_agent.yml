@@ -1,0 +1,6 @@
+---
+- name: Register agent with server
+  ansible.builtin.shell: |
+    /usr/bin/cmk-agent-ctl register -H {{ cmk_server_name }} \
+      -s {{ cmk_server_name }} -i {{ cmk_site_name }} \
+      -U agent -P {{ cmk_registration_pw }} --trust-cert

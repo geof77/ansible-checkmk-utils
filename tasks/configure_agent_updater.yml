@@ -1,0 +1,44 @@
+---
+# for this snippet to work, we need to
+#   * generate agent signature key pair using an existing cmk installation
+#   * copy the agent_signature_keys.mk file in the files/ directory
+#   * extract the certificate part (verbatim) into file/agent_cert.pem
+#   * example files are provided so you get the formatting ok
+
+- name: Install agent signature keys
+  ansible.buitin.copy:
+    src: agent_signature_keys.mk
+    dest: /omd/sites/{{ cmk_site_name }}/etc/check_mk/multisite.d/wato/
+    mode: 0660
+    owner: "{{ cmk_site_name }}"
+    group: "{{ cmk_site_name }}"
+
+- name: Create updater plugin rule
+  tribe29.checkmk.rule:
+    server_url: "{{ cmk_server_url }}"
+    site: "{{ cmk_site_name }}"
+    automation_user: "automation"
+    automation_secret: "{{ cmk_automation_pw }}"
+    ruleset: "agent_config:cmk_update_agent"
+    rule:
+      properties:
+        comment: "{{ ansible_managed }}"
+        description: "Deploy agent update plugin"
+      value_raw: "{
+        'activated': True,
+        'interval': 3600,
+        'server_data': {
+          'protocol': 'http',
+          'server': '{{ cmk_server_fqdn }}',
+          'site': '{{ cmk_site_name }}',
+          'usage': 'registration'
+        },
+        'signature_keys': [{{ lookup('file', 'agent_cert.pem') | string }}]
+        }"
+    state: present
+
+- name: Enable automatic agent updates (global settings)
+  ansible.builtin.lineinfile:
+    path: /opt/omd/sites/{{ cmk_site_name }}/etc/check_mk/multisite.d/wato/global.mk
+    line: "agent_deployment_enabled = True"
+    state: present
