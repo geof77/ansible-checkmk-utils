@@ -12,10 +12,10 @@
 # * agent and update agent deployed
 # * agent and update agent registered
 
-import_task: get_automation_pw.yml
-import_task: create_registration_user.yml
-import_task: configure_agent_updater.yml
-import_task: bake_and_sign_agents.yml
-import_task: install_agent.yml
-import_task: register_agent.yml
-import_task: register_update_agent.yml
+import_tasks: get_automation_pw.yml
+import_tasks: create_registration_user.yml
+import_tasks: configure_agent_updater.yml
+import_tasks: bake_and_sign_agents.yml
+import_tasks: install_agent.yml
+import_tasks: register_agent.yml
+import_tasks: register_update_agent.yml
