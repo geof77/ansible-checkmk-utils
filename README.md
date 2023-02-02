@@ -1,5 +1,5 @@
-checkmk-utils
-=============
+cmk-utils
+=========
 
 A few ansible snippets to copy/paste in your playbooks.
 
