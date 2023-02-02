@@ -1,7 +1,7 @@
 cmk-utils
 =========
 
-A few ansible snippets to copy/paste in your playbooks.
+A few ansible snippets for checkmk, to copy/paste in your playbooks.
 
 No warranty. Use at your own risk.
 
