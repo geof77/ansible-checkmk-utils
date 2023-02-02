@@ -1,0 +1,21 @@
+---
+
+# WARNING: not tested, provided as an example
+#
+# a checkmk post-installation playbook to configure
+# a checkmk server with the following features oob:
+#
+# * agent registration and download role and user
+# * automatic updates enabled
+# * agent signature keys ready
+# * agent with update plugin signed and baked
+# * agent and update agent deployed
+# * agent and update agent registered
+
+import_task: get_automation_pw.yml
+import_task: create_registration_user.yml
+import_task: configure_agent_updater.yml
+import_task: bake_and_sign_agents.yml
+import_task: install_agent.yml
+import_task: register_agent.yml
+import_task: register_update_agent.yml

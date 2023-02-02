@@ -1,4 +1,5 @@
 ---
+# Needs agent signature key and password
 - name: Start baking agents
   ansible.builtin.uri:
     url: "{{ cmk_api_url }}/domain-types/agent/actions/bake_and_sign/invoke"
