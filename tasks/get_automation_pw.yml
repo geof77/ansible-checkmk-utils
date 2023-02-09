@@ -1,9 +1,11 @@
 ---
 # this should be the first task in the playbook
 - name: Get CheckMK automation password
-  ansible.builtin.command: cat /omd/sites/{{ cmk_site_name }}/var/check_mk/web/automation/automation.secret
+  ansible.builtin.shell: |
+    cat /omd/sites/{{ cmk_site_name }}/var/check_mk/web/automation/automation.secret
   register: result
   check_mode: false
+  changed_when: false
 
 - name: Set automation pw fact
   ansible.builtin.set_fact:
