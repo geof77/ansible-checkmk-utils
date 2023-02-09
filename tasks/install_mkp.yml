@@ -1,0 +1,38 @@
+---
+# Download and install CheckMK plugins
+#
+# usage:
+#
+# import_role: 
+#   name: cmk-utils
+#   tasks_from: install_mkp.yml
+# loop:
+#   - name: robotmk
+#     url: https://github.com/elabit/robotmk/releases/download/v1.4.1/robotmk.v1.4.1-cmk2.mkp
+
+- name: Check if {{ item.name }} mkp is already installed
+  ansible.builtin.shell: |
+    bash -l -c "mkp list | grep '^{{ item.name }}' || true"
+  become: true
+  become_user: "{{ cmk_site_name }}"
+  register: mkp_installed
+  changed_when: false
+
+- name: Get {{ item.name }} package
+  ansible.builtin.uri:
+    url: "{{ item.url }}"
+    dest: /tmp/
+    status_code: [200, 304]
+  environment:
+    https_proxy: "{{ https_proxy }}"
+  become: true
+  become_user: "{{ cmk_site_name }}"
+  when: mkp_installed.stdout == ''
+  register: mkp_download
+
+- name: Add {{ item.name }} package to CheckMK
+  ansible.builtin.shell: |
+    bash -l -c "mkp install {{ mkp_download.path }}"
+  become: true
+  become_user: "{{ cmk_site_name }}"
+  when: mkp_installed.stdout == ''
