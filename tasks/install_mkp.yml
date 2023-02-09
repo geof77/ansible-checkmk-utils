@@ -44,3 +44,5 @@
     state: absent
   become: true
   become_user: "{{ cmk_site_name }}"
+  when: mkp_installed.stdout == ''
+
