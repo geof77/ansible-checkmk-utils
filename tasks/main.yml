@@ -2,8 +2,8 @@
 
 # WARNING: not tested, provided as an example
 #
-# a checkmk post-installation playbook to configure
-# a checkmk server with the following features oob:
+# a checkmk post-installation playbook to configure a checkmk server with the
+# following features oob:
 #
 # * agent registration and download role and user
 # * automatic updates enabled
@@ -11,11 +11,13 @@
 # * agent with update plugin signed and baked
 # * agent and update agent deployed
 # * agent and update agent registered
+#
+# See individual files for configuration instructions.
 
-import_tasks: get_automation_pw.yml
-import_tasks: create_registration_user.yml
-import_tasks: configure_agent_updater.yml
-import_tasks: bake_and_sign_agents.yml
-import_tasks: install_agent.yml
-import_tasks: register_agent.yml
-import_tasks: register_update_agent.yml
+- ansible.builtin.import_tasks: get_automation_pw.yml
+- ansible.builtin.import_tasks: create_registration_user.yml
+- ansible.builtin.import_tasks: configure_agent_updater.yml
+- ansible.builtin.import_tasks: bake_and_sign_agents.yml
+- ansible.builtin.import_tasks: install_agent.yml
+- ansible.builtin.import_tasks: register_agent.yml
+- ansible.builtin.import_tasks: register_update_agent.yml
