@@ -40,6 +40,6 @@
 
 - name: Remove downloaded file
   ansible.builtin.file:
-    path: "{{ mkp_download.path }}
+    path: "{{ mkp_download.path }}"
     state: absent
   when: mkp_install.rc == 0 or mkp_installed.stdout != ''
