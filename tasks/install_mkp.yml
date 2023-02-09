@@ -3,24 +3,24 @@
 #
 # usage:
 #
-# import_role: 
+# include_role: 
 #   name: cmk-utils
 #   tasks_from: install_mkp.yml
-# loop:
-#   - name: robotmk
-#     url: https://github.com/elabit/robotmk/releases/download/v1.4.1/robotmk.v1.4.1-cmk2.mkp
+# vars:
+#   name: robotmk
+#   url: https://github.com/elabit/robotmk/releases/download/v1.4.1/robotmk.v1.4.1-cmk2.mkp
 
-- name: Check if {{ item.name }} mkp is already installed
+- name: Check if {{ name }} mkp is already installed
   ansible.builtin.shell: |
-    bash -l -c "mkp list | grep '^{{ item.name }}' || true"
+    bash -l -c "mkp list | grep '^{{ name }}' || true"
   become: true
   become_user: "{{ cmk_site_name }}"
   register: mkp_installed
   changed_when: false
 
-- name: Get {{ item.name }} package
+- name: Get {{ name }} package
   ansible.builtin.uri:
-    url: "{{ item.url }}"
+    url: "{{ url }}"
     dest: /tmp/
     status_code: [200, 304]
   environment:
@@ -30,7 +30,7 @@
   when: mkp_installed.stdout == ''
   register: mkp_download
 
-- name: Add {{ item.name }} package to CheckMK
+- name: Add {{ name }} package to CheckMK
   ansible.builtin.shell: |
     bash -l -c "mkp install {{ mkp_download.path }}"
   become: true

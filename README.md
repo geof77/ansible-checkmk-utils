@@ -14,7 +14,7 @@ Requirements
 ------------
 
 * ansible
-* CheckMK (mostly CEE edition)
+* CheckMK
 
 Dependencies
 ------------
