@@ -36,3 +36,10 @@
   become: true
   become_user: "{{ cmk_site_name }}"
   when: mkp_installed.stdout == ''
+  register: mkp_install
+
+- name: Remove downloaded file
+  ansible.builtin.file:
+    path: "{{ mkp_download.path }}
+    state: absent
+  when: mkp_install.rc == 0 or mkp_installed.stdout != ''
